@@ -41,7 +41,7 @@ browseVignettes('ULM')
 ```
 
 ## Dependencies
-This package depends on the following packages:
+This package depends on
         Seurat (>= 3.0.0), 
         decoupleR, 
         tidyverse, 
@@ -52,8 +52,8 @@ This package depends on the following packages:
         tidygraph, 
         ggplot2,
         magrittr,
-        tibble
-All the dependencies might be installed alongside the package.
+        tibble.
+All required packages might be automatically installed alongside the ULM package.
 
 ## Example
 
