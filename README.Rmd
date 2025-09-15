@@ -40,6 +40,21 @@ A full guide on ULM workflow can be found on the package website https://sidex71
 browseVignettes('ULM') 
 ```
 
+## Dependencies
+This package depends on the following packages:
+        Seurat (>= 3.0.0), 
+        decoupleR, 
+        tidyverse, 
+        dplyr, 
+        stringr, 
+        igraph, 
+        ggraph, 
+        tidygraph, 
+        ggplot2,
+        magrittr,
+        tibble
+All the dependencies might be installed alongside the package.
+
 ## Example
 
 This is a quick example which shows how to infer physical cell-cell interaction network from a scRNAseq data:

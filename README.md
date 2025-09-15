@@ -43,6 +43,13 @@ browseVignettes('ULM')
 #> No vignettes found by browseVignettes("ULM")
 ```
 
+## Dependencies
+
+This package depends on the following packages: Seurat (\>= 3.0.0),
+decoupleR, tidyverse, dplyr, stringr, igraph, ggraph, tidygraph,
+ggplot2, magrittr, tibble All the dependencies might be installed
+alongside the package.
+
 ## Example
 
 This is a quick example which shows how to infer physical cell-cell
@@ -57,6 +64,20 @@ set.seed(101324)
 int_sig <- ULM::GetSignature(int_singData, ident_col = int_singData$Cell_Type, n = 100)
 #> using the specified seurat ident to generate signatures
 #> Calculating cluster Progenitor early
+#> Warning: The `slot` argument of `GetAssayData()` is deprecated as of SeuratObject 5.0.0.
+#> ℹ Please use the `layer` argument instead.
+#> ℹ The deprecated feature was likely used in the Seurat package.
+#>   Please report the issue at <https://github.com/satijalab/seurat/issues>.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
+#> Warning: `PackageCheck()` was deprecated in SeuratObject 5.0.0.
+#> ℹ Please use `rlang::check_installed()` instead.
+#> ℹ The deprecated feature was likely used in the Seurat package.
+#>   Please report the issue at <https://github.com/satijalab/seurat/issues>.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 #> Calculating cluster Progenitor late-1
 #> Calculating cluster Transit amplifying
 #> Calculating cluster Progenitor late-2
