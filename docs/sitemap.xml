@@ -1,18 +1,18 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>/404.html</loc></url>
-<url><loc>/articles/ULM-vignette.html</loc></url>
-<url><loc>/articles/index.html</loc></url>
-<url><loc>/authors.html</loc></url>
-<url><loc>/index.html</loc></url>
-<url><loc>/news/index.html</loc></url>
-<url><loc>/reference/AddMetaObject.html</loc></url>
-<url><loc>/reference/FilterMultiplet.html</loc></url>
-<url><loc>/reference/GetCellAssignments.html</loc></url>
-<url><loc>/reference/GetCellScores.html</loc></url>
-<url><loc>/reference/GetMultiplet.html</loc></url>
-<url><loc>/reference/GetNodeDF.html</loc></url>
-<url><loc>/reference/GetSignature.html</loc></url>
-<url><loc>/reference/PlotNetwork.html</loc></url>
-<url><loc>/reference/index.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/404.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/articles/ULM-vignette.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/articles/index.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/authors.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/index.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/news/index.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/AddMetaObject.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/FilterMultiplet.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/GetCellAssignments.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/GetCellScores.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/GetMultiplet.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/GetNodeDF.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/GetSignature.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/PlotNetwork.html</loc></url>
+<url><loc>https://sidex71.github.io/ULM/reference/index.html</loc></url>
 </urlset>
 
