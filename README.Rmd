@@ -35,7 +35,7 @@ library(devtools)
 
 devtools::install_github("Sidex71/ULM")
 ```
-A full guide on the usage of ULM can be found in the package vignettes or the full tutorials below
+A full guide on the usage of ULM can be found in the package website, vignettes,  or the full tutorials (see below)
 ```{r}
 ```
 
@@ -80,7 +80,7 @@ my_node_df <- GetNodeDF(mat = multSummaryFilt)
 PlotNetwork(my_node_df)
 ```
 
-A more comprehensive guide on the usage of the ULM package can be found in the full tutorials below
+A more comprehensive guide on the usage of the ULM package can be found in the full tutorials below (check also the package vignettes or web article)
 
 ```{r}
 

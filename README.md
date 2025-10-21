@@ -34,8 +34,8 @@ library(devtools)
 devtools::install_github("Sidex71/ULM")
 ```
 
-A full guide on the usage of ULM can be found in the package vignettes
-or the full tutorials below
+A full guide on the usage of ULM can be found in the package website,
+vignettes, or the full tutorials (see below)
 
 ## Dependencies
 
@@ -100,7 +100,8 @@ PlotNetwork(my_node_df)
 <img src="man/figures/README-example-1.png" width="100%" />
 
 A more comprehensive guide on the usage of the ULM package can be found
-in the full tutorials below
+in the full tutorials below (check also the package vignettes or web
+article)
 
 ``` r
 #########################################################################################
