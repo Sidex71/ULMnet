@@ -1,0 +1,6 @@
+pandoc: 3.1.11
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  ULM-vignette: ULM-vignette.html
+last_built: 2025-10-21T14:22Z
