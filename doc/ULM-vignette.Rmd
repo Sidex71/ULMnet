@@ -1,0 +1,261 @@
+---
+title: "ULM-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ULM-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Introduction
+ULM is a package to reconstruct physical cell-cell interaction networks from conventional scRNAseq datasets using signature-based approach. Basically, ULM utilises univariate linear models to identify multiplets (mostly doublets) which potentially represent undissociated cell fractions that are physically connected cell neighbors in tissue. 
+
+![](/mnt/8TB/users/shameed/shameed/Doublet predictions/scripts/ULM/man/figures/algorithm.jpeg){width=100%}
+
+
+We first load the ULM package
+
+```{r setup}
+library(ULM)
+```
+
+In this vignette, we first test ULM on a scRNAseq dataset of small intestinal tissue (Andrews et al., 2021, pubmed: GSE175664). The preprocessed scRNAseq can be loaded by running this code:
+```{r}
+data("int_singData")
+int_singData
+```
+
+Let us visualise the metadata to see the available cell annotations
+```{r}
+head(int_singData@meta.data)
+```
+
+As we can see, there is a 'Cell_Type' column  that contains cell annotations.
+Let us visualize the annotated Seurat clusters
+```{r, fig.width=7, fig.height=6, fig.align='center'}
+library(Seurat)
+DimPlot(int_singData, reduction="umap", group.by="Cell_Type", label=TRUE)
+```
+
+Now let us use the ULM pipeline to identify multiplets present in this data and infer physical interaction network.
+
+The first step in the pipeline is to generate cell type-specific gene signatures. This will generate a default of 100 genes that best mark each annotated cell type cluster in the data.
+```{r}
+set.seed(101324)
+int_sig <- GetSignature(int_singData, ident_col = int_singData$Cell_Type, n = 100)
+```
+
+Let us visualize what the signature table looks like
+```{r}
+head(int_sig, 10)
+```
+The signature table has 3 columns, the source column contains the cell type, the target column contains the genes and the mor column contains the weights.
+
+Next, we score each cell in the scRNseq data for cell signatures by fitting univariate linear models. We will score the signatures on each barcode (cell) in the normalised gene count matrix (found in the slot = data). To use the raw count, set slot = 'count'
+```{r}
+my_scores <- GetCellScores(seurat_obj = int_singData, signatures = int_sig, assay = 'RNA', slot = 'data')
+```
+
+Let us visualize the cell score data frame
+```{r}
+head(my_scores, 10)
+```
+
+As seen, the cell score data frame contains the scores of barcodes for each cell signature as well as the p values. Positive scores infer enriched signatures while negative scores infer non-enriched signatures for each barcode.
+
+Next is to label each barcode by cell types based on the signature scores. Cells with one significant signature score will have a single-cell label while cells with more than one significant signature score will have a multi-cell label. Please note that barcodes and cells are used interchangeably.
+```{r}
+my_ass <- GetCellAssignments(score_data = my_scores, cut_off = 1, p_val = 0.05)
+```
+We choose a cut-off of 1 to depict enriched signatures. This means that we considered all negative scores and those below 1 as non-enriched. Ideally, all positive scores should be considered enriched but choosing a cut-off of 1 will increase precision of our cell assignment. However, users may choose to set the cut-off at 0 or higher. Note that there is a trade off between cutoff and cell dropout. 
+
+Let us visualize the cell assignment data frame.
+```{r}
+head(my_ass, 10)
+```
+
+As we can see, the cell assignment data frame has a dedicated column called "count_ulm" which tells how many cell signatures a given barcode has. For example, a count_ulm value of 2 means that the barcode has a significant score for two different signatures and as such it is a predicted doublet, while a value of 3 represents a predicted triplet. Also, the "celltype_ulm" column contains the specific signatures that a barcode expresses. For example, the first 3 barcodes have count_ulm values of 2 and the associated cell labels are "Enterocyte_Progenitor late-1" as seen in the celltype_ulm column. This means that those barcodes are cells (doublets) that were enriched in dual gene signatures.
+
+Now that we have predicted each barcode in the data and assigned labels to them based on cell type-specific gene sigatures, we can then add the new labels and the associated statistics to the metadata of our Seurat Object. Let us view the metadata once again before we add the predicted labels
+```{r}
+head(int_singData@meta.data)
+```
+
+Now let us add the predicted labels and view the metadata.
+```{r}
+int_singData <- AddMetaObject(int_singData, cell_class_df = my_ass)
+```
+
+```{r}
+head(int_singData@meta.data)
+```
+
+Obviously, the statistics, count_ulm, celltype_ulm, avg_pvalue and avg_score columns have now been added to our Seurat Object. The count_ulm and celltype_ulm columns have been explained in the previous section. The avg_score contains the average of the predicted scores for all signatures enriched in a barcode, while the avg_pvalue takes the average of the p values associated with those scores. Since each p value was statistically significant, taking the average will ensure that the final p value remains statistically significant. The average scores and p values are only applicable to multiplets (count_ulm > 2) having multi signature scores, singlets (count_ulm = 1) will retain their single scores and p values. Finally, some barcodes have NAs for the newly added column, this represent barcodes that did not significantly enrich in any signature.
+
+The final steps in the pipeline involve isolating multiplets and plotting physical cell-cell interaction network. Let us isolate the multiplets from our Seurat Object, setting minCells = 2, meaning we want barcodes of doublets and above. Set minCells to 3 if you want triplets and above etc. 
+```{r}
+my_mult <- GetMultiplet(int_singData, minCells = 2)
+```
+
+This generates a list containing a multiplet Seurat Object and a multiplet. The multiplet summary shows multiplet types and frequency. Let us show the multiplet summary table.
+```{r}
+multSummary <- my_mult$multSummary
+multSummary
+```
+
+We can also see the total number of predicted multiplets from the summary table
+```{r}
+sum(multSummary$frequency)
+```
+
+The multiplet Seurat Object is just a typical object that can be utilised for multiplet modeling or any downstream analysis as the user pleases. Let us see the multiplet Seurat Object.
+```{r}
+multObj <- my_mult$multObj
+multObj
+```
+
+We can also see the multiplet order from the multiplet object
+```{r}
+table(multObj$count_ulm)
+```
+
+There are 698 multiplets i total, of these, 673 were doublets and 25 are triplets.
+
+As we can observe in the multiplet summary table, some multiplet types (e.g Enterocyte_Paneth_Progenitor.late.1) have a frequency of 1, meaning only one cell (barcode) belong to this multiplet type, occuring only once in the dataset. However, some multiplet types have a frequency well over 100, meaning that these types are found in well over 100 barcodes. To improve confidence, it is imperative to filter the obtained multiplets to discard those that are not found in sufficient number of barcodes. Now let us filter our multiplets to include only those muliplet types that were found in at least 10 barcodes (minFreq = 10).
+```{r}
+my_mult_filt <- FilterMultiplet(int_singData, minCells = 2, minFreq = 10)
+```
+
+Similarly, this returns a list of filtered multiplet summary table and filtered multiplet Seurat Object. The filtered table will now contain only multiplet types with frequency of 10 and above. Also the multiplet types have now reduced from 28 to 6 after filtering.
+```{r}
+multSummaryFilt <- my_mult_filt$multSummaryFilt
+multSummaryFilt
+```
+
+We can similarly explore the filtered multiplet object. Again, this can be used for downstream analysis as a typical scRNAseq data if the user pleases.
+```{r}
+multObjFilt <- my_mult_filt$multObjFilt
+multObjFilt
+```
+
+Finally, we will plot a cell-cell interaction network from the filtered multiplets. To do this, we need to first decompose the filtered multiplet summary table in to a pairwise node-edge data frame.
+```{r}
+my_node_df <- GetNodeDF(mat = multSummaryFilt)
+```
+
+Let us view the pairwise node-edge dataframeformed 
+```{r}
+my_node_df
+```
+
+Finally, we can plot the physical interaction network
+```{r, fig.width=8, fig.height=6, fig.align='left'}
+PlotNetwork(my_node_df)
+```
+
+Indeed, we see interactions involving progenitors and other intestinal epithelial cells. This is biologically plausible since progenitor cells are known to transition through stages to replace the rapidly old intestinal epithelial cells such as enterocyte, transit amplifying cells and goblet cells. 
+
+
+
+
+In the final part of this vignette, we show that it is also possible to use a reference scRNAseq data set to generate signatures which can then be utilised to predict multiplet and depict physical interactions in a different query scRNAseq data of similar tissue of origin. For this purpose, we use the intestinal scRNAseq data above as reference to generate signatures. We will then utilise this to predict multiplets in a query dataset of partially dissociated intestinal scRNAseq data from the same study (Andrews et al., 2021, pubmed: GSE175664). We load query and reference data sets
+```{r}
+data("int_singData")
+ref_obj <- int_singData
+ref_obj
+```
+
+```{r}
+data("int_multData")
+query_obj <- int_multData
+query_obj
+```
+
+Let us generate signatures from the reference dataset
+```{r}
+set.seed(101324)
+ref_sig <- GetSignature(ref_obj, ident_col = ref_obj$Cell_Type)
+head(ref_sig, 10)
+```
+
+NB: It is also possible to directly import and utilize a reference signature but this must be formatted to suit the output of the GetSignature() function above. That is, it must be a data frame (or tibble) with 3 columns- source, target and mor, containing the cell type, signatures and weight (=1) respectively.
+```{r}
+
+```
+
+We then utilize the reference signature to predict multiplets in the query data set and construct a physical cell-cell interaction network.
+
+Getting query cell scores
+```{r}
+my_scores <- GetCellScores(seurat_obj = query_obj, signatures = ref_sig, assay = 'RNA', slot = 'data')
+```
+
+Assigning cell labels
+```{r}
+my_ass <- GetCellAssignments(score_data = my_scores)
+```
+
+Adding cell labels to the metadata
+```{r}
+lab_query_obj <- AddMetaObject(query_obj, cell_class_df = my_ass)
+```
+
+Obtaining predicted multiplets
+```{r}
+query_mult <- GetMultiplet(lab_query_obj)
+```
+
+Multiplet summary table
+```{r}
+query_multSummary <- query_mult$multSummary
+query_multSummary
+```
+
+Multiplet order
+```{r}
+query_multObj <- query_mult$multObj
+query_multObj
+table(query_multObj$count_ulm)
+```
+
+Filtering multiplets
+```{r}
+query_mult_filt <- FilterMultiplet(lab_query_obj, minFreq = 7)
+```
+
+Filtered multiplet summary table
+```{r}
+query_multSummaryFilt <- query_mult_filt$multSummaryFilt
+query_multSummaryFilt
+```
+
+Generating pairwise node-edge data frame from the filtered multiplet summary table
+```{r}
+query_network_df <- GetNodeDF(mat = query_multSummaryFilt)
+```
+
+Plotting query cell-cell interaction network
+```{r, fig.width=15, fig.height=12, fig.align='left'}
+PlotNetwork(query_network_df)
+```
+
+```{r}
+
+```
+
+
+THE END
+
+Reference
+```{r}
+
+```
+
+Andrews N, Serviss JT, Geyer N, Andersson AB, Dzwonkowska E, Šutevski I, et al. An unsupervised method for physical cell interaction profiling of complex tissues. Nat Methods. 2021;18:912–20. 
