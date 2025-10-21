@@ -3,4 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   ULM-vignette: ULM-vignette.html
-last_built: 2025-10-21T14:50Z
+last_built: 2025-10-21T15:30Z
+urls:
+  reference: https://sidex71.github.io/ULM/reference
+  article: https://sidex71.github.io/ULM/articles
