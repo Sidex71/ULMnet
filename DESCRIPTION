@@ -1,6 +1,6 @@
-Package: ULM
+Package: ULM-Net
 Type: Package
-Title: Inferring Physical Cell-cell Interaction Networks from ScRNAseq Data
+Title: Inferring Physical Cell-cell Interaction Networks from ScRNAseq Data using univariate linear models
 Version: 0.1.0
 Depends: R (>= 4.4.0), stats, utils
 Authors@R: 
@@ -33,5 +33,5 @@ Suggests:
     knitr,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
-URL: https://github.com/Sidex71/ULM, https://sidex71.github.io/ULM/
+URL: https://github.com/Sidex71/ULM-Net, https://sidex71.github.io/ULM/
 Config/testthat/edition: 3
