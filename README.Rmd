@@ -13,18 +13,18 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ULM
+# ULMnet
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-An R package for the prediction and identification of multiplets from scRNAseq datasets to infer physical cell-cell interaction networks. Multiplets occur naturally in conventional scRNAseq due to incomplete dissociation during library preparation. They represent cells which are physically connected and interacting in tissues which become sequenced together as they remain unseperated. ULM utilizes a signature-based approach where univariate linear models are fitted over each barcode in a scRNAseq data to assign signature scores. Barcodes are then classified as singlets or multiplets based on their signature scores. Multiplets are those barcodes or cells that are enriched in two or more cell type-specific gene signatures.
+An R package for the prediction and identification of multiplets from scRNAseq datasets to infer physical cell-cell interaction networks. Multiplets occur naturally in conventional scRNAseq due to incomplete dissociation during library preparation. They represent cells which are physically connected and interacting in tissues which become sequenced together as they remain unseperated. ULMnet utilizes a signature-based approach where univariate linear models are fitted over each barcode in a scRNAseq data to assign signature scores. Barcodes are then classified as singlets or multiplets based on their signature scores. Multiplets are those barcodes or cells that are enriched in two or more cell type-specific gene signatures.
 
 ![](man/figures/algorithm.png){width=100%}
 
 ## Installation
 
-You can install the development version of ULM from [GitHub](https://github.com/) with:
+You can install the development version of ULMnet from [GitHub](https://github.com/) with:
 
 
 ``` r
@@ -33,9 +33,9 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 }
 library(devtools)
 
-devtools::install_github("Sidex71/ULM")
+devtools::install_github("Sidex71/ULMnet")
 ```
-A full guide on the usage of ULM can be found in the package website, vignettes,  or the full tutorials (see below)
+A full guide on the usage of ULMnet can be found in the package website, vignettes,  or the full tutorials (see below)
 ```{r}
 ```
 
@@ -52,19 +52,19 @@ This package depends on
         ggplot2,
         magrittr,
         tibble.
-All required packages might be automatically installed alongside the ULM package if not already installed.
+All required packages might be automatically installed alongside the ULMnet package if not already installed.
 
 ## Example
 
 This is a quick example which shows how to infer physical cell-cell interaction network from a scRNAseq data:
 
 ```{r example, fig.width=8, fig.height=6}
-library(ULM)
+library(ULMnet)
 #####load dataset
 data("int_singData")  ##int_singData is a preprocessed scRNAseq seurat object with a Cell_Type column containing cell annotations.
 ##generate signatures
 set.seed(101324)
-int_sig <- ULM::GetSignature(int_singData, ident_col = int_singData$Cell_Type, n = 100)
+int_sig <- ULMnet::GetSignature(int_singData, ident_col = int_singData$Cell_Type, n = 100)
 
 ###score cells and assign labels
 my_scores <- GetCellScores(seurat_obj = int_singData, signatures = int_sig, assay = 'RNA', layer  = 'data')
@@ -80,7 +80,7 @@ my_node_df <- GetNodeDF(mat = multSummaryFilt)
 PlotNetwork(my_node_df)
 ```
 
-A more comprehensive guide on the usage of the ULM package can be found in the full tutorials below (check also the package vignettes or web article)
+A more comprehensive guide on the usage of the ULMnet package can be found in the full tutorials below (check also the package vignettes or web article)
 
 ```{r}
 
@@ -90,21 +90,21 @@ A more comprehensive guide on the usage of the ULM package can be found in the f
 #########################################################################################
 ```
 
-## Full Tutorials- A complete guide on the ULM Package 
+## Full Tutorials- A complete guide on the ULMnet Package 
 
 Introduction
 
 
-ULM is a package to reconstruct physical cell-cell interaction networks from conventional scRNAseq datasets using signature-based approach. Basically, ULM utilises univariate linear models to identify multiplets (mostly doublets) which potentially represent undissociated cell fractions that are physically connected cell neighbors in tissue. 
+ULMnet is a package to reconstruct physical cell-cell interaction networks from conventional scRNAseq datasets using signature-based approach. Basically, ULMnet utilises univariate linear models to identify multiplets (mostly doublets) which potentially represent undissociated cell fractions that are physically connected cell neighbors in tissue. 
 
 
-We first load the ULM package
+We first load the ULMnet package
 
 ```{r setup}
-library(ULM)
+library(ULMnet)
 ```
 
-In this vignette, we first test ULM on a scRNAseq dataset of small intestinal tissue (Andrews et al., 2021, pubmed: GSE175664). The preprocessed scRNAseq can be loaded by running this code:
+In this vignette, we first test ULMnet on a scRNAseq dataset of small intestinal tissue (Andrews et al., 2021, pubmed: GSE175664). The preprocessed scRNAseq can be loaded by running this code:
 ```{r}
 data("int_singData")
 int_singData
@@ -122,7 +122,7 @@ library(Seurat)
 DimPlot(int_singData, reduction="umap", group.by="Cell_Type", label=TRUE)
 ```
 
-Now let us use the ULM pipeline to identify multiplets present in this data and infer physical interaction network.
+Now let us use the ULMnet pipeline to identify multiplets present in this data and infer physical interaction network.
 
 The first step in the pipeline is to generate cell type-specific gene signatures. This will generate a default of 100 genes that best mark each annotated cell type cluster in the data.
 ```{r}

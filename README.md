@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ULM
+# ULMnet
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -11,7 +11,7 @@ scRNAseq datasets to infer physical cell-cell interaction networks.
 Multiplets occur naturally in conventional scRNAseq due to incomplete
 dissociation during library preparation. They represent cells which are
 physically connected and interacting in tissues which become sequenced
-together as they remain unseperated. ULM utilizes a signature-based
+together as they remain unseperated. ULMnet utilizes a signature-based
 approach where univariate linear models are fitted over each barcode in
 a scRNAseq data to assign signature scores. Barcodes are then classified
 as singlets or multiplets based on their signature scores. Multiplets
@@ -22,7 +22,7 @@ type-specific gene signatures.
 
 ## Installation
 
-You can install the development version of ULM from
+You can install the development version of ULMnet from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -31,17 +31,17 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 }
 library(devtools)
 
-devtools::install_github("Sidex71/ULM")
+devtools::install_github("Sidex71/ULMnet")
 ```
 
-A full guide on the usage of ULM can be found in the package website,
+A full guide on the usage of ULMnet can be found in the package website,
 vignettes, or the full tutorials (see below)
 
 ## Dependencies
 
 This package depends on Seurat (\>= 3.0.0), decoupleR, tidyverse, dplyr,
 stringr, igraph, ggraph, tidygraph, ggplot2, magrittr, tibble. All
-required packages might be automatically installed alongside the ULM
+required packages might be automatically installed alongside the ULMnet
 package if not already installed.
 
 ## Example
@@ -50,12 +50,12 @@ This is a quick example which shows how to infer physical cell-cell
 interaction network from a scRNAseq data:
 
 ``` r
-library(ULM)
+library(ULMnet)
 #####load dataset
 data("int_singData")  ##int_singData is a preprocessed scRNAseq seurat object with a Cell_Type column containing cell annotations.
 ##generate signatures
 set.seed(101324)
-int_sig <- ULM::GetSignature(int_singData, ident_col = int_singData$Cell_Type, n = 100)
+int_sig <- ULMnet::GetSignature(int_singData, ident_col = int_singData$Cell_Type, n = 100)
 #> using the specified seurat ident to generate signatures
 #> Calculating cluster Progenitor early
 #> Warning: The `slot` argument of `GetAssayData()` is deprecated as of SeuratObject 5.0.0.
@@ -99,31 +99,32 @@ PlotNetwork(my_node_df)
 
 <img src="man/figures/README-example-1.png" width="100%" />
 
-A more comprehensive guide on the usage of the ULM package can be found
-in the full tutorials below (check also the package vignettes or web
-article)
+A more comprehensive guide on the usage of the ULMnet package can be
+found in the full tutorials below (check also the package vignettes or
+web article)
 
 ``` r
 #########################################################################################
 ```
 
-## Full Tutorials- A complete guide on the ULM Package
+## Full Tutorials- A complete guide on the ULMnet Package
 
 Introduction
 
-ULM is a package to reconstruct physical cell-cell interaction networks
-from conventional scRNAseq datasets using signature-based approach.
-Basically, ULM utilises univariate linear models to identify multiplets
-(mostly doublets) which potentially represent undissociated cell
-fractions that are physically connected cell neighbors in tissue.
+ULMnet is a package to reconstruct physical cell-cell interaction
+networks from conventional scRNAseq datasets using signature-based
+approach. Basically, ULMnet utilises univariate linear models to
+identify multiplets (mostly doublets) which potentially represent
+undissociated cell fractions that are physically connected cell
+neighbors in tissue.
 
-We first load the ULM package
+We first load the ULMnet package
 
 ``` r
-library(ULM)
+library(ULMnet)
 ```
 
-In this vignette, we first test ULM on a scRNAseq dataset of small
+In this vignette, we first test ULMnet on a scRNAseq dataset of small
 intestinal tissue (Andrews et al., 2021, pubmed: GSE175664). The
 preprocessed scRNAseq can be loaded by running this code:
 
@@ -189,8 +190,8 @@ DimPlot(int_singData, reduction="umap", group.by="Cell_Type", label=TRUE)
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" />
 
-Now let us use the ULM pipeline to identify multiplets present in this
-data and infer physical interaction network.
+Now let us use the ULMnet pipeline to identify multiplets present in
+this data and infer physical interaction network.
 
 The first step in the pipeline is to generate cell type-specific gene
 signatures. This will generate a default of 100 genes that best mark
