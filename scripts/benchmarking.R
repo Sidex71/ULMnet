@@ -418,7 +418,7 @@ saveRDS(confmat_all, '/mnt/8TB/users/shameed/shameed/Doublet predictions/confmat
 #############plot
 
 #colnames(confmat_all)[5] <- '% doublet detected'
-confmat_all$Method <- str_replace(confmat_all$Method, 'ulm', 'ULM')
+confmat_all$Method <- str_replace(confmat_all$Method, 'ulm', 'ULMnet')
 
 data <- confmat_all %>% filter(Tissue=='in vitro') %>% 
   dplyr:: select(c(Method, Sensitivity, Specificity, Precision, Tissue)) %>%
@@ -491,7 +491,7 @@ saveRDS(my_metrics, 'my_metrics.rds')
 
 data <- my_metrics %>% rownames_to_column('Method')
 colnames(data)[3] <- '% doublet detected'
-data$Method <- str_replace(data$Method, 'ulm', 'ULM')
+data$Method <- str_replace(data$Method, 'ulm', 'ULMnet')
 
 p1<-ggplot(data, aes(x = Method, y = `% doublet detected`, fill = Method)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.5), width = 0.3) +  # Bar position dodge width should match text
@@ -661,7 +661,7 @@ conf_df <- rbind(confmat_scrublet_invitro$byClass[1:4],
                  confmat_DoubletFinder_invitro$byClass[1:4],
                  confmat_scdb_invitro$byClass[1:4],
                  confmat_invitro_ulm$byClass[1:4])
-my_meth <- c('Scrublet', 'DoubletFinder', 'scDblFinder', 'ULM')
+my_meth <- c('Scrublet', 'DoubletFinder', 'scDblFinder', 'ULMnet')
 conf_df<- as.data.frame(conf_df)
 conf_df$Method <- my_meth
 
@@ -673,7 +673,7 @@ inv_df <- rbind(confmat_scrublet_invivo$byClass[1:4],
                  confmat_DoubletFinder_invivo$byClass[1:4],
                  confmat_scdb_invivo$byClass[1:4],
                  confmat_invivo_ulm$byClass[1:4])
-my_meth <- c('Scrublet', 'DoubletFinder', 'scDblFinder', 'ULM')
+my_meth <- c('Scrublet', 'DoubletFinder', 'scDblFinder', 'ULMnet')
 inv_df<- as.data.frame(inv_df)
 inv_df$Method <- my_meth
 
