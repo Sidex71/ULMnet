@@ -1,7 +1,7 @@
 test_that("AddMetaObject correctly adds cell assignments to metadata", {
   ###### Load test data from ULM package
-  data("int_singData", package = "ULM") ## load scRNAseq data
-  data("int_signature", package = "ULM") ## load signatures
+  data("int_singData", package = "ULMnet") ## load scRNAseq data
+  data("int_signature", package = "ULMnet") ## load signatures
   
   ######### prepare data: run upstream steps 
   ## Compute signature scores on 200 cells

@@ -2,8 +2,8 @@
 
 test_that("FilterMultiplet filters multiplets correctly", {
   ###### Load test data from ULM package
-  data("int_multData", package = "ULM")   ## load scRNAseq data
-  data("int_signature", package = "ULM")  ## load signatures
+  data("int_multData", package = "ULMnet")   ## load scRNAseq data
+  data("int_signature", package = "ULMnet")  ## load signatures
   
   ######### prepare data: run upstream steps 
   ## Compute signature scores on 300 cells

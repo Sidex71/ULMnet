@@ -1,7 +1,7 @@
 test_that("GetCellScores returns cell signature scores", {
   ### Load test data from the ULM package
-  data("int_singData", package = "ULM") ## load scRNAseq data
-  data("int_signature", package = "ULM") ## load signatures
+  data("int_singData", package = "ULMnet") ## load scRNAseq data
+  data("int_signature", package = "ULMnet") ## load signatures
   
   ### Run function on 200 cells using the normalised data layer
   scores <- GetCellScores(

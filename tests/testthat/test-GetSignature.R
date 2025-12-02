@@ -1,6 +1,6 @@
 test_that("GetSignature generates signatures correctly", {
   # load an example scRNAseq data provided with the package
-  data("int_singData", package = "ULM")
+  data("int_singData", package = "ULMnet")
   
   # run the function with a specified annotation column
   expect_message(
